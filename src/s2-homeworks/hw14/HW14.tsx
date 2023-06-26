@@ -3,7 +3,7 @@ import s2 from '../../s1-main/App.module.css'
 import s from './HW14.module.css'
 import axios from 'axios'
 import SuperDebouncedInput from './common/c8-SuperDebouncedInput/SuperDebouncedInput'
-import {useSearchParams} from 'react-router-dom'
+import {createSearchParams, useSearchParams} from 'react-router-dom'
 
 /*
 * 1 - дописать функцию onChangeTextCallback в SuperDebouncedInput
@@ -15,10 +15,10 @@ import {useSearchParams} from 'react-router-dom'
 
 const getTechs = (find: string) => {
     return axios
-        .get<{ techs: string[] }>(
-            'https://incubator-personal-page-back.herokuapp.com/api/3.0/homework/test2',
+        .get(
+            'https://samurai.it-incubator.io/api/3.0/homework/test2',
             {params: {find}}
-        )
+        ).then(res => res.data)
         .catch((e) => {
             alert(e.response?.data?.errorText || e.message)
         })
@@ -33,23 +33,16 @@ const HW14 = () => {
     const sendQuery = (value: string) => {
         setLoading(true)
         getTechs(value)
-            .then((res) => {
-                // делает студент
-
-                // сохранить пришедшие данные
-
-                //
+            .then(res => {
+                setTechs(res.techs)
+                setLoading(false)
             })
     }
 
     const onChangeText = (value: string) => {
         setFind(value)
-        // делает студент
-
-        // добавить/заменить значение в квери урла
-        // setSearchParams(
-
-        //
+        sendQuery(value)
+        setSearchParams({find: value})
     }
 
     useEffect(() => {
@@ -75,11 +68,9 @@ const HW14 = () => {
                     onChangeText={onChangeText}
                     onDebouncedChange={sendQuery}
                 />
-
                 <div id={'hw14-loading'} className={s.loading}>
                     {isLoading ? '...ищем' : <br/>}
                 </div>
-
                 {mappedTechs}
             </div>
         </div>
