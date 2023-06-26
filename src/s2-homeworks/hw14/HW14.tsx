@@ -31,6 +31,7 @@ const HW14 = () => {
     const [techs, setTechs] = useState<string[]>([])
 
     const sendQuery = (value: string) => {
+
         setLoading(true)
         getTechs(value)
             .then(res => {
@@ -41,7 +42,6 @@ const HW14 = () => {
 
     const onChangeText = (value: string) => {
         setFind(value)
-        sendQuery(value)
         setSearchParams({find: value})
     }
 
